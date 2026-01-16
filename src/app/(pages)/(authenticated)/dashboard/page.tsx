@@ -1,5 +1,4 @@
-import { spotifyFetch } from '@/app/server/spotify/spotify';
-import { SpotifyUser } from '@/app/server/spotify/types';
+import Playlists from '@/components/PlayLists';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -13,9 +12,9 @@ export default async function dashboard() {
         redirect('/');
     }
 
-    const user = (await spotifyFetch('/me')) as SpotifyUser;
-
-    console.log(user);
-
-    return <h1>hej {user.display_name}</h1>;
+    return (
+        <>
+            <Playlists dashboard={true} />
+        </>
+    );
 }

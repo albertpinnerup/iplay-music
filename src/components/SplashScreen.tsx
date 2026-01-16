@@ -2,24 +2,54 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import { motion } from 'motion/react';
+import { useSession } from '@/lib/auth-client';
 
 export default function SplashScreen() {
+    const router = useRouter();
+    const { data: session, isPending } = useSession();
+
+    const [minTimePassed, setMinTimePassed] = useState(false);
     const [show, setShow] = useState(true);
 
+    // // 1️⃣ Enforce minimum splash duration
     useEffect(() => {
-        setTimeout(() => {
-            setShow(false);
-            redirect('/login');
-        }, 1500);
+        const t = setTimeout(() => {
+            setMinTimePassed(true);
+        }, 2000);
+
+        return () => clearTimeout(t);
     }, []);
+
+    // 2️⃣ Hide splash only when BOTH conditions are met
+    useEffect(() => {
+        if (minTimePassed && !isPending) {
+            setShow(false);
+
+            // decide where to go
+            if (session) {
+                router.push('/dashboard');
+            } else {
+                router.push('/login');
+            }
+        }
+    }, [minTimePassed, isPending, session, router]);
 
     if (!show) return null;
 
     return (
-        <div className='flex flex-col items-center gap-8'>
+        <motion.div
+            className='flex flex-col items-center gap-8'
+            initial={{ opacity: 0, y: 150 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+                duration: 1.2,
+                ease: 'easeInOut',
+            }}
+        >
             <Image src='/music-logo-solid.svg' alt='iPlayMusic Logo' width={200} height={215} />
             <h1 className='text-white text-4xl'>IplayMusic</h1>
-        </div>
+        </motion.div>
     );
 }

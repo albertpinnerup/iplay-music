@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Poppins } from 'next/font/google';
+import { ThemeProvider } from 'next-themes';
 
 export const metadata: Metadata = {
     title: {
@@ -22,13 +23,17 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang='en'>
-            <body className={poppins.className}>
-                <div className='flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-[#341931] '>
-                    <main className='flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-[#341931] sm:items-start'>
-                        {children}
-                    </main>
-                </div>
+        <html lang='en' suppressHydrationWarning>
+            <body className={`${poppins.className} text-black dark:text-white`}>
+                <ThemeProvider
+                    attribute='class'
+                    defaultTheme='system'
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {/* items-center justify-center  */}
+                    {children}
+                </ThemeProvider>
             </body>
         </html>
     );
