@@ -14,7 +14,12 @@ export default async function dashboard() {
 
     return (
         <>
-            <Playlists dashboard={true} />
+            <div className='flex flex-col gap-4'>
+                <h1 className='bg-linear-to-br from-[#EE0979] to-[#FF6A00] bg-clip-text text-transparent'>
+                    Playlists
+                </h1>
+                <Playlists dashboard={true} />
+            </div>
         </>
     );
 }

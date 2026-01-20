@@ -8,11 +8,11 @@ export default function AuthenticatedLayout({
 }>) {
     return (
         <div className='flex flex-col min-h-screen dark:bg-[#341931]'>
-            <header>
+            <header className='fixed z-20 top-0 w-full'>
                 <Header />
             </header>
-            <main className='p-4'>{children}</main>
-            <footer className='absolute bottom-0 w-full'>
+            <main className='p-4 pb-20'>{children}</main>
+            <footer className='fixed bottom-0 w-full'>
                 <NavBar />
             </footer>
         </div>
