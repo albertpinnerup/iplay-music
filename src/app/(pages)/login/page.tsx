@@ -7,7 +7,7 @@ export default async function loginPage() {
 
             {/* This takes up all remaining vertical space */}
             <div className='flex flex-1 items-center justify-center'>
-                <AuthButton text='Sign in with Spotify' />
+                <AuthButton text='Sign in with Spotify' mode={'signIn'} />
             </div>
         </main>
     );

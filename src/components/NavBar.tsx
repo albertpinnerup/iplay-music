@@ -23,7 +23,7 @@ export default function NavBar() {
     const pathname = usePathname();
     const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
-    console.log('pathname', pathname);
+    // console.log('pathname', pathname);
 
     return (
         <>

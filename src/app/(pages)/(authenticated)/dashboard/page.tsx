@@ -1,3 +1,4 @@
+import MusicScroll from '@/components/MusicScroll';
 import Playlists from '@/components/PlayLists';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
@@ -19,6 +20,7 @@ export default async function dashboard() {
                     Playlists
                 </h1>
                 <Playlists dashboard={true} />
+                <MusicScroll />
             </div>
         </>
     );

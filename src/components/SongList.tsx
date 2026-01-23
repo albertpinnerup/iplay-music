@@ -14,7 +14,7 @@ export default function SongList({ track, index }: SongListProps) {
 
     // console.log(artists);
 
-    console.log('tracks', track);
+    // console.log('tracks', track);
 
     if (!track) {
         return <h1>No Available tracks</h1>;

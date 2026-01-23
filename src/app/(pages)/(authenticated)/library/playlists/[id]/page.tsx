@@ -3,9 +3,6 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Play } from 'lucide-react';
-import { msToMin } from '@/lib/utils';
 import SongList from '@/components/SongList';
 export default async function PlaylistDetails({ params }: { params: Promise<{ id: string }> }) {
     const session = await auth.api.getSession({
@@ -13,7 +10,7 @@ export default async function PlaylistDetails({ params }: { params: Promise<{ id
     });
 
     if (!session) {
-        redirect('/');
+        redirect('/login');
     }
     const { id } = await params;
     const data: any = await spotifyFetch(`/playlists/${id}`);
@@ -21,7 +18,7 @@ export default async function PlaylistDetails({ params }: { params: Promise<{ id
 
     const img = data.images[0];
 
-    console.log(data.tracks.items);
+    // console.log(data.tracks.items);
 
     return (
         <>
