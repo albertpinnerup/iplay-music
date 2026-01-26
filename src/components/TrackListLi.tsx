@@ -8,7 +8,7 @@ type SongListProps = {
     index?: number;
 };
 
-export default function SongList({ track, index }: SongListProps) {
+export default function TrackListLi({ track, index }: SongListProps) {
     const artists = track?.artists?.map((artist: any) => artist.name).join(', ');
     const duration = msToMin(track?.duration_ms ?? 0);
 

@@ -21,7 +21,7 @@ const navItems: NavItem[] = [
 
 export default function NavBar() {
     const pathname = usePathname();
-    const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+    const isActive = (href: string) => pathname === href || pathname.includes(`${href}/`);
 
     // console.log('pathname', pathname);
 

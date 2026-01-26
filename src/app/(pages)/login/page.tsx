@@ -1,6 +1,17 @@
 import AuthButton from '@/components/AuthButton';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function loginPage() {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    if (session) {
+        redirect('/dashboard');
+    }
+
     return (
         <main className='mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-8 bg-white px-8 py-8 dark:bg-[#FF1168]'>
             <h1 className='text-start text-4xl text-black dark:text-white'>Login</h1>

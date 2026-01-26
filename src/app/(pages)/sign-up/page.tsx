@@ -1,3 +1,5 @@
+import { signUpAction } from '@/app/api/auth/actions';
+
 export default function SignupForm() {
     return (
         <form action={signUpAction}>
