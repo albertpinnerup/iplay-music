@@ -14,9 +14,11 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
+    console.log('User is authenticated:', session.user);
+
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/dashboard'], // Specify the routes the middleware applies to
+    matcher: ['/(pages)/**'], // Specify the routes the middleware applies to
 };

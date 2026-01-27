@@ -27,7 +27,7 @@ export default async function DecadeSection({ decade, limit = 10 }: Props) {
         <section className='space-y-3'>
             <h2 className='text-lg font-semibold'>{decade}s</h2>
 
-            <div className='flex overflow-scroll scrollbare-hide gap-x-4 gap-y-2'>
+            <div className='flex overflow-scroll scrollbar-hide gap-x-4 gap-y-2'>
                 {albums.map((a) => (
                     <Link
                         key={a.id}
