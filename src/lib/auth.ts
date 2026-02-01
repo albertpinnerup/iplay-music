@@ -18,12 +18,13 @@ export const auth = betterAuth({
         spotify: {
             clientId: process.env.SPOTIFY_CLIENT_ID as string,
             clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
-            scope: ['user-read-email', 'user-read-private'],
-            // make scopes explicit on the authorize URL
-            // authorizationEndpoint: 'https://accounts.spotify.com/authorize?show_dialog=true&scope=user-read-email&user-read-private',
-
-            // prevent Better Auth from adding provider defaults on top
-            // disableDefaultScope: true,
+            scope: [
+                'streaming',
+                'user-read-playback-state',
+                'user-modify-playback-state',
+                'user-read-email',
+                'user-read-private',
+            ],
         },
     },
     trustedOrigins: ['http://127.0.0.1:3000'],
