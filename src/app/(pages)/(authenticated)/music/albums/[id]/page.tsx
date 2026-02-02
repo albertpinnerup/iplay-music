@@ -21,7 +21,7 @@ export default async function AlbumDetails({ params }: { params: Promise<{ id: s
     const { id } = await params;
     const album = await spotifyFetch<SpotifyAlbum>(`/albums/${id}`);
     const tracks = await spotifyFetch<{ items: SpotifyTrackList }>(`/albums/${id}/tracks`);
-    console.log('album', album);
+    
 
     const data = {
         id: album.id,

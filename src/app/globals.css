@@ -121,6 +121,58 @@
     display: none;
 }
 
+/* .page-sheet { */
+/*     view-transition-name: page-sheet; */
+/* } */
+
+/* Sheet comes from bottom */
+::view-transition-new(.slide-in) {
+    animation: sheet-in 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Old page stays put (no animation), so the new one feels like a sheet overlay */
+::view-transition-old(.slide-in) {
+    animation: none;
+}
+
+@keyframes sheet-in {
+    from {
+        transform: translateY(100%);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}
+
+::view-transition-new(.slide-out) {
+    animation: sheet-out 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+::view-transition-old(.slide-out) {
+    animation: sheet-out 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    border-radius: 20px;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.25);
+}
+
+::view-transition-new(.slide-out) {
+    animation: none;
+}
+
+@keyframes sheet-out {
+    from {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(100%);
+        opacity: 1;
+    }
+}
+
 @layer base {
     * {
         @apply border-border outline-ring/50;

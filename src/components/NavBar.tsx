@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { House, Library, Play, Search, Settings, type LucideIcon } from 'lucide-react';
+import { useSpotifyPlayback } from './hooks/useSpotifyPlayback';
+import NavPlayer from './NavPlayer';
 
 type NavItem = {
     id: string;
@@ -14,7 +16,7 @@ type NavItem = {
 const navItems: NavItem[] = [
     { id: 'home', label: 'Home', href: '/dashboard', icon: House },
     { id: 'search', label: 'Search', href: '/search', icon: Search },
-    { id: 'media', label: 'Media', href: '/media', icon: Play },
+    { id: 'player', label: 'Player', href: '/player', icon: Play },
     { id: 'library', label: 'Library', href: '/library', icon: Library },
     { id: 'settings', label: 'Settings', href: '/settings', icon: Settings },
 ];
@@ -23,10 +25,9 @@ export default function NavBar() {
     const pathname = usePathname();
     const isActive = (href: string) => pathname === href || pathname.includes(`${href}/`);
 
-    // console.log('pathname', pathname);
-
     return (
         <>
+            <NavPlayer />
             <svg width='0' height='0' className='absolute'>
                 <linearGradient
                     gradientUnits='userSpaceOnUse'
@@ -51,7 +52,7 @@ export default function NavBar() {
                                 <Link
                                     href={item.href}
                                     className={
-                                        item.id === 'media'
+                                        item.id === 'player'
                                             ? 'bg-linear-to-br from-[#EE0979] to-[#FF6A00] flex p-2 rounded-full'
                                             : ''
                                     }
@@ -60,7 +61,7 @@ export default function NavBar() {
                                         size={item.id === 'media' ? 25 : 20}
                                         aria-hidden='true'
                                         stroke={
-                                            active || item.id === 'media'
+                                            active || item.id === 'player'
                                                 ? '#fff'
                                                 : 'url(#icon-gradient)'
                                         }

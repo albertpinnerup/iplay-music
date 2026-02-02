@@ -21,7 +21,7 @@ export default async function DecadeSection({ decade, limit = 10 }: Props) {
     const data = await spotifyFetch<SpotifySearchResponse>(`/search?${params.toString()}`);
     const albums: SpotifyAlbum[] = data.albums?.items ?? [];
 
-    // console.log('albums', albums);
+    // 
 
     return (
         <section className='space-y-3'>

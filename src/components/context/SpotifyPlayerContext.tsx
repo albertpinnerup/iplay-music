@@ -6,6 +6,8 @@ type PlaybackState = {
     isPaused: boolean;
     trackUri: string | null;
     trackId?: string | null;
+    positionMs?: number;
+    durationMs?: number;
 };
 
 type SpotifyContextValue = {
@@ -13,6 +15,7 @@ type SpotifyContextValue = {
     deviceId: string | null;
     isReady: boolean;
     playback: PlaybackState;
+    track: Spotify.Track | null;
 };
 
 const SpotifyPlayerContext = createContext<SpotifyContextValue | null>(null);
@@ -34,6 +37,8 @@ export function SpotifyPlayerProvider({
         isPaused: true,
         trackUri: null,
         trackId: null,
+        positionMs: 0,
+        durationMs: 0,
     });
 
     // Always keep the latest token available to the SDK
@@ -93,6 +98,8 @@ export function SpotifyPlayerProvider({
                     isPaused: state.paused,
                     trackUri: t?.uri ?? null,
                     trackId: t?.linked_from?.id ?? t?.id ?? null,
+                    positionMs: state.position,
+                    durationMs: state.duration,
                 });
             });
 
@@ -112,6 +119,29 @@ export function SpotifyPlayerProvider({
         };
     }, [accessToken]);
 
+    const [track, setTrack] = useState<Spotify.Track | null>(null);
+
+    // Optional: fetch full track details when playback.trackId changes
+    useEffect(() => {
+        async function fetchTrackDetails(trackId: string) {
+            const token = tokenRef.current;
+            if (!token) return;
+            const res = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setTrack(data);
+            }
+        }
+
+        if (playback.trackId) {
+            fetchTrackDetails(playback.trackId).catch(console.error);
+        } else {
+            setTrack(null);
+        }
+    }, [playback.trackId]);
+
     return (
         <SpotifyPlayerContext.Provider
             value={{
@@ -119,6 +149,7 @@ export function SpotifyPlayerProvider({
                 deviceId,
                 isReady,
                 playback,
+                track: track,
             }}
         >
             {children}

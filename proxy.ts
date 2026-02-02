@@ -14,7 +14,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url));
     }
 
-    console.log('User is authenticated:', session.user);
+    
 
     return NextResponse.next();
 }

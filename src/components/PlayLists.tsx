@@ -26,7 +26,7 @@ export default async function Playlists({ dashboard }: { dashboard: boolean }) {
 
     const data = await spotifyFetch<SpotifyPlaylistsResponse>('/me/playlists?limit=8');
     const playlists: SpotifyPlaylist[] = data.items;
-    // console.log(playlists);
+    // 
 
     return (
         <div className='grid grid-cols-2 gap-x-4 gap-y-2'>
