@@ -10,8 +10,11 @@ export default function SplashScreen() {
     const router = useRouter();
     const { data: session, isPending } = useSession();
 
+    const SPLASH_SEEN_KEY = 'iplay:splash-seen';
+
     const [minTimePassed, setMinTimePassed] = useState(false);
     const [show, setShow] = useState(true);
+    const [hasSeen, setHasSeen] = useState(false);
 
     // // 1️⃣ Enforce minimum splash duration
     useEffect(() => {
@@ -22,19 +25,39 @@ export default function SplashScreen() {
         return () => clearTimeout(t);
     }, []);
 
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        setHasSeen(window.localStorage.getItem(SPLASH_SEEN_KEY) === '1');
+    }, []);
+
     // 2️⃣ Hide splash only when BOTH conditions are met
     useEffect(() => {
-        if (minTimePassed && !isPending) {
-            setShow(false);
+        if (isPending) return;
 
-            // decide where to go
-            if (session) {
+        if (session) {
+            if (minTimePassed) {
+                setShow(false);
                 router.push('/dashboard');
-            } else {
-                router.push('/login');
             }
+            return;
         }
-    }, [minTimePassed, isPending, session, router]);
+
+        // No session
+        if (hasSeen) {
+            setShow(false);
+            router.replace('/login');
+            return;
+        }
+
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem(SPLASH_SEEN_KEY, '1');
+        }
+
+        if (minTimePassed) {
+            setShow(false);
+            router.push('/login');
+        }
+    }, [minTimePassed, isPending, session, router, hasSeen]);
 
     if (!show) return null;
 

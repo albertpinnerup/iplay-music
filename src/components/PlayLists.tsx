@@ -8,25 +8,12 @@ type SpotifyPlaylistsResponse = {
     items: SpotifyPlaylist[];
 };
 
-// async function getPlaylists() {
-//     const res = await fetch(
-//         `${process.env.BETTER_AUTH_URL}/api/spotify/playlists?limit=8&offset=0`,
-//         {
-//             cache: 'no-store', // or next: { revalidate: 60 }
-//         }
-//     );
-//
-//     if (!res.ok) throw new Error('Failed to load playlists');
-//     const data = await res.json();
-//     return data.items as Playlist[];
-// }
-
 export default async function Playlists({ dashboard }: { dashboard: boolean }) {
     if (!dashboard) return null;
 
     const data = await spotifyFetch<SpotifyPlaylistsResponse>('/me/playlists?limit=8');
     const playlists: SpotifyPlaylist[] = data.items;
-    // 
+    //
 
     return (
         <div className='grid grid-cols-2 gap-x-4 gap-y-2'>

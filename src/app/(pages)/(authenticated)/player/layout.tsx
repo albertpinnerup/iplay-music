@@ -72,7 +72,7 @@ export default function PlayerLayout({ children }: { children: React.ReactNode }
             {/* Sheet */}
             <div
                 className='fixed inset-x-0 top-4 z-50 h-[calc(100vh-1rem)] rounded-xl
-                   bg-background dark:bg-[#341931]
+                   bg-background dark:bg-[#111625]
                    shadow-2xl ring-1 ring-black/10 dark:ring-white/10 px-4'
                 style={sheetStyle}
                 onPointerDown={onPointerDown}

@@ -97,6 +97,7 @@ export type SpotifyPlaylist = {
     images?: SpotifyImage[];
     owner?: SpotifyUser;
     type?: 'playlist';
+    uri?: string;
 };
 
 /* -------------------------------------------------------------------------- */

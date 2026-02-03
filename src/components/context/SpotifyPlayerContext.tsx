@@ -1,11 +1,14 @@
 'use client';
 
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 type PlaybackState = {
     isPaused: boolean;
     trackUri: string | null;
     trackId?: string | null;
+    contextUri?: string | null;
+    hasNext?: boolean;
+    hasPrev?: boolean;
     positionMs?: number;
     durationMs?: number;
 };
@@ -16,6 +19,7 @@ type SpotifyContextValue = {
     isReady: boolean;
     playback: PlaybackState;
     track: Spotify.Track | null;
+    refreshPlaybackState: () => Promise<void>;
 };
 
 const SpotifyPlayerContext = createContext<SpotifyContextValue | null>(null);
@@ -28,6 +32,7 @@ export function SpotifyPlayerProvider({
     children: React.ReactNode;
 }) {
     const playerRef = useRef<Spotify.Player | null>(null);
+    const [player, setPlayer] = useState<Spotify.Player | null>(null);
     const tokenRef = useRef<string | null>(null);
 
     const [deviceId, setDeviceId] = useState<string | null>(null);
@@ -39,12 +44,30 @@ export function SpotifyPlayerProvider({
         trackId: null,
         positionMs: 0,
         durationMs: 0,
+        contextUri: null,
+        hasNext: false,
+        hasPrev: false,
     });
 
     // Always keep the latest token available to the SDK
     useEffect(() => {
         tokenRef.current = accessToken;
     }, [accessToken]);
+
+    const setPlaybackFromState = useCallback((state: Spotify.PlaybackState) => {
+        const t = state.track_window.current_track;
+
+        setPlayback({
+            isPaused: state.paused,
+            trackUri: t?.uri ?? null,
+            trackId: t?.id ?? null,
+            positionMs: state.position,
+            durationMs: state.duration,
+            hasNext: state.track_window.next_tracks.length > 0,
+            hasPrev: state.track_window.previous_tracks.length > 0,
+            contextUri: state.context?.uri ?? null,
+        });
+    }, []);
 
     useEffect(() => {
         if (!accessToken) return;
@@ -65,6 +88,7 @@ export function SpotifyPlayerProvider({
             });
 
             playerRef.current = player;
+            setPlayer(player);
 
             player.addListener('ready', ({ device_id }) => {
                 setDeviceId(device_id);
@@ -91,16 +115,7 @@ export function SpotifyPlayerProvider({
 
             player.addListener('player_state_changed', (state) => {
                 if (!state) return;
-
-                const t = state.track_window.current_track;
-
-                setPlayback({
-                    isPaused: state.paused,
-                    trackUri: t?.uri ?? null,
-                    trackId: t?.linked_from?.id ?? t?.id ?? null,
-                    positionMs: state.position,
-                    durationMs: state.duration,
-                });
+                setPlaybackFromState(state);
             });
 
             player.addListener('authentication_error', console.error);
@@ -142,14 +157,22 @@ export function SpotifyPlayerProvider({
         }
     }, [playback.trackId]);
 
+    const refreshPlaybackState = useCallback(async () => {
+        if (!player) return;
+        const state = await player.getCurrentState();
+        if (!state) return;
+        setPlaybackFromState(state);
+    }, [player, setPlaybackFromState]);
+
     return (
         <SpotifyPlayerContext.Provider
             value={{
-                player: playerRef.current,
+                player,
                 deviceId,
                 isReady,
                 playback,
                 track: track,
+                refreshPlaybackState,
             }}
         >
             {children}

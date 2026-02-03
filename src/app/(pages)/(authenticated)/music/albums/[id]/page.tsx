@@ -6,6 +6,8 @@ import {
     SpotifyTrackList,
 } from '@/app/server/spotify/types';
 import CollectionDetailsPage from '@/components/CollectionDetails';
+import { PlaybackContextProvider } from '@/components/context/PlaybackContext';
+import SwipeBack from '@/components/SwipeBack';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -21,7 +23,6 @@ export default async function AlbumDetails({ params }: { params: Promise<{ id: s
     const { id } = await params;
     const album = await spotifyFetch<SpotifyAlbum>(`/albums/${id}`);
     const tracks = await spotifyFetch<{ items: SpotifyTrackList }>(`/albums/${id}/tracks`);
-    
 
     const data = {
         id: album.id,
@@ -31,9 +32,16 @@ export default async function AlbumDetails({ params }: { params: Promise<{ id: s
         tracks: {
             items: tracks.items.map((t: SpotifyTrack) => ({ track: t })),
         },
+        uri: album.uri,
     };
 
     // const albumData: any = await spotifyFetch( xx)
 
-    return <CollectionDetailsPage data={data} />;
+    return (
+        <SwipeBack>
+            <PlaybackContextProvider contextUri={data?.uri}>
+                <CollectionDetailsPage data={data} />
+            </PlaybackContextProvider>
+        </SwipeBack>
+    );
 }

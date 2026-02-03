@@ -55,15 +55,83 @@ export function useSpotifyPlayback() {
         await player.seek(ms);
     }
 
+    async function playFromContext(contextUri: string, trackUri?: string) {
+        if (!isReady || !deviceId) return;
+
+        const res = await getAccessToken({ providerId: 'spotify' });
+        const token = res.data?.accessToken;
+        if (!token) return;
+
+        if (!contextUri) return;
+        const body: any = { context_uri: contextUri };
+
+        // Start at a specific track within the context
+        if (trackUri) body.offset = { uri: trackUri };
+
+        await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+    }
+
+    async function next() {
+        if (!isReady) return;
+
+        if (player) {
+            await player.nextTrack();
+            return;
+        }
+
+        if (!deviceId) return;
+
+        const res = await getAccessToken({ providerId: 'spotify' });
+        const token = res.data?.accessToken;
+        if (!token) return;
+
+        await fetch(`https://api.spotify.com/v1/me/player/next?device_id=${deviceId}`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+    }
+
+    async function previous() {
+        if (!isReady) return;
+
+        if (player) {
+            await player.previousTrack();
+            return;
+        }
+
+        if (!deviceId) return;
+
+        const res = await getAccessToken({ providerId: 'spotify' });
+        const token = res.data?.accessToken;
+        if (!token) return;
+
+        await fetch(`https://api.spotify.com/v1/me/player/previous?device_id=${deviceId}`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+    }
+
     return {
         isReady,
         isPaused: playback.isPaused,
         play,
+        playFromContext,
         pause,
         seek,
+        next,
+        previous,
         currentTrackUri: playback.trackUri,
         currentTrackId: playback.trackId,
         currentPositionMs: playback.positionMs,
         currentDurationMs: playback.durationMs,
+        hasNext: playback.hasNext,
+        hasPrev: playback.hasPrev,
     };
 }

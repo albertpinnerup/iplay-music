@@ -8,14 +8,16 @@ export function PlayPauseButton({
     uri,
     trackId,
     size,
+    contextUri,
     look = 'default',
 }: {
     uri: string;
     trackId?: string;
     size?: number;
+    contextUri?: string;
     look?: 'default' | 'minimal';
 }) {
-    const { isReady, isPaused, currentTrackId, currentTrackUri, play, pause } =
+    const { isReady, isPaused, currentTrackId, currentTrackUri, playFromContext, play, pause } =
         useSpotifyPlayback();
 
     const isThisTrack = currentTrackId === trackId;
@@ -36,7 +38,7 @@ export function PlayPauseButton({
         }
 
         // Otherwise -> start THIS track
-        await play(uri);
+        await playFromContext(contextUri ?? '', uri);
     }
 
     return (
@@ -56,28 +58,4 @@ export function PlayPauseButton({
             </span>
         </Button>
     );
-    {
-        /* <Button */
-    }
-    {
-        /*     size={'icon'} */
-    }
-    {
-        /*     className={`rounded-full w-[${size ? size : 30}] h-[${size ? size : 30}] ${look === 'default' ? 'bg-linear-to-br from-[#EE0979] to-[#FF6A00] p-3' : 'bg-transparent p-0'}  row-span-2  self-center`} */
-    }
-    {
-        /*     onClick={toggle} */
-    }
-    {
-        /*     disabled={!isReady} */
-    }
-    {
-        /* > */
-    }
-    {
-        /*     {showPause ? <Pause fill='white' stroke='none' /> : <Play fill='white' stroke='none' />} */
-    }
-    {
-        /* </Button> */
-    }
 }

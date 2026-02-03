@@ -1,4 +1,5 @@
 import AuthButton from '@/components/AuthButton';
+import SwipeBack from '@/components/SwipeBack';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -11,5 +12,9 @@ export default async function SettingsPage() {
     if (!session) {
         redirect('/login');
     }
-    return <AuthButton text='Sign Out' mode={'signOut'} />;
+    return (
+        <SwipeBack>
+            <AuthButton text='Sign Out' mode={'signOut'} />
+        </SwipeBack>
+    );
 }

@@ -11,15 +11,11 @@ export default function NavPlayer() {
     const { currentTrackId, currentTrackUri } = useSpotifyPlayback();
     const { track } = useSpotifyPlayer();
 
-    console.log('NavPlayer track', track);
-
     if (!currentTrackId || !currentTrackUri) {
         return null;
     }
 
     const trackImageUrl = track?.album.images[0]?.url || '/default-track-image.png';
-
-    console.log('trackImageUrl', trackImageUrl);
 
     return (
         <div className='flex items-center w-full h-full py-2 px-2 gap-3 dark:bg-[#111625] border-b border-gray-800'>

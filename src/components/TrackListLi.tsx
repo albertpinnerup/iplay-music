@@ -4,6 +4,7 @@ import { msToMin } from '@/lib/utils';
 import { SpotifyTrack } from '@/app/server/spotify/types';
 import { PlayPauseButton } from './PlayPauseButton';
 import { useSpotifyPlayback } from './hooks/useSpotifyPlayback';
+import { usePlaybackContextUri } from './context/PlaybackContext';
 
 type SongListProps = {
     track?: SpotifyTrack; // optional because you use data?.tracks?.items
@@ -11,6 +12,9 @@ type SongListProps = {
 };
 
 export default function TrackListLi({ track, index }: SongListProps) {
+    const contextUri = usePlaybackContextUri();
+    const { isReady, seek, playFromContext } = useSpotifyPlayback();
+
     const artists = track?.artists?.map((artist: any) => artist.name).join(', ');
     const duration = msToMin(track?.duration_ms ?? 0);
 
@@ -18,13 +22,11 @@ export default function TrackListLi({ track, index }: SongListProps) {
         return <h1>No Available tracks</h1>;
     }
 
-    const { isReady, seek, play } = useSpotifyPlayback();
-
     async function restartFromStart() {
         if (!isReady) return;
 
         await seek(0);
-        await play(track?.uri);
+        await playFromContext(contextUri, track?.uri);
     }
 
     return (
@@ -37,7 +39,7 @@ export default function TrackListLi({ track, index }: SongListProps) {
                 onClick={(e) => e.stopPropagation()}
                 className='col-start-1 row-start-1 row-span-2'
             >
-                <PlayPauseButton uri={track.uri} trackId={track.id} />
+                <PlayPauseButton uri={track.uri} trackId={track.id} contextUri={contextUri} />
             </div>
             <h2 className='col-start-2 text-ellipsis line-clamp-1'>{track.name}</h2>
             <p className='text-ellipsis line-clamp-1 col-start-2'>{artists}</p>

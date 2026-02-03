@@ -18,6 +18,7 @@ type Collection = {
     tracks: {
         items: TrackListItem[];
     };
+    uri?: string;
 };
 
 type Props = {
