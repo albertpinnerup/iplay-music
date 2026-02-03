@@ -1,36 +1,3 @@
-// src/app/api/auth/callback/route.ts
-// import { auth } from '@/lib/auth';
-// import { toNextJsHandler } from 'better-auth/next-js';
-//
-// export const { GET, POST } = toNextJsHandler(auth);
-
-// export async function GET(req: Request) {
-//     const url = new URL(req.url);
-//
-//     // Rewrite to the provider-specific callback that Better Auth expects
-//     const target = new URL('/api/auth/callback/spotify', url.origin);
-//     target.search = url.search;
-//
-//     // Forward cookies so Better Auth can validate state
-//     const res = await fetch(target, {
-//         method: 'GET',
-//         headers: {
-//             cookie: req.headers.get('cookie') ?? '',
-//             // optional, but harmless:
-//             'user-agent': req.headers.get('user-agent') ?? '',
-//             accept: req.headers.get('accept') ?? '*/*',
-//         },
-//         redirect: 'manual', // preserve Better Auth redirects back to your app
-//     });
-//
-//     // Pass through status + headers (including Set-Cookie)
-//     return new Response(res.body, {
-//         status: res.status,
-//         headers: res.headers,
-//     });
-// }
-//
-
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
